@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<body>
+	<div class="jumbotron">
+		<div class="text-center">
+	<h1>Dashboard</h1>
+	<h2>Welcome back {{user}}</h2>
+		</div>
+		{% for p in pesanan %}
+		<div class="card mb-4 h-100">
+                <div class="card-body">
+                        <div class="article">
+				<h2 class="card-title">Pesanan {{ p.mobil.plat  }}-{{ p.user }}</h2>
+				{% if p.approved %}
+				<h3>Status: Sedang dipesan/dipakai</h3>
+				{% else %}
+				<h3>Status: Menunggu Konfirmasi</h3>
+				{% endif %}
+                    <p class="card-text text-muted h6">{{ p.mobil.nama }} | {{ p.mobil.plat }} </p>
+                        </div>
+			<img style="max-width:400px; max-height:400px" src="{{ p.mobil.gambar.url }}">
+			<p>Tanggal Pemesanan: {{ p.tgl_pesan }}</p>
+			<p>Tanggal Kembali: {{ p.tgl_kembali }}</p>
+                </div>
+		<form method="POST" action="{% url 'batal' %}?plat={{ p.mobil.plat }}">
+			{% csrf_token %}
+			<button value="batal" class="btn btn-primary" type="submit">Batalkan Pesanan</button>
+		</form>
+        </div>
+{% endfor %}
+	</div>
+</body>
+{% endblock %}

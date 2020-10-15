@@ -1,0 +1,70 @@
+{% block sidebar %}
+
+   <form method="POST">
+    {% csrf_token %}
+        </div><div class="col-md-4 order-md-1 col-lg-3 sidebar-filter">
+        {% if request.method == "POST" %}
+          <h3 class="mt-0 mb-5">Showing <span class="text-primary">{{ filtered.count }}</span> Products</h3>
+        {% else %}
+          <h3 class="mt-0 mb-5">Showing <span class="text-primary">{{ relevance.count }}</span> Products</h3>
+        {% endif %}
+          <h6 class="text-uppercase font-weight-bold mb-3">Categories</h6>
+          <div class="mt-2 mb-2 pl-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" name="kategori" id="category-1" value="Covertible">
+              <label class="custom-control-label" for="category-1">Covertible</label>
+            </div>
+          </div>
+          <div class="mt-2 mb-2 pl-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" name="kategori" id="category-2" value="Coupe">
+              <label class="custom-control-label" for="category-2">Coupe</label>
+            </div>
+          </div>
+          <div class="mt-2 mb-2 pl-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" name="kategori" id="category-3" value="Sedan">
+              <label class="custom-control-label" for="category-3">Sedan</label>
+            </div>
+          </div>
+          <div class="mt-2 mb-2 pl-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="category-4" name="kategori" value="Hatchback">
+              <label class="custom-control-label" for="category-4">Hatchback</label>
+            </div>
+          </div>
+          <div class="mt-2 mb-2 pl-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="category-5" name="kategori" value="SUV">
+              <label class="custom-control-label" for="category-5">SUV</label>
+            </div>
+          </div>
+          <div class="mt-2 mb-2 pl-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="category-6" name="kategori" value="MPV">
+              <label class="custom-control-label" for="category-6"> MPV</label>
+            </div>
+          </div>
+          <div class="divider mt-5 mb-5 border-bottom border-secondary"></div>
+          <h6 class="text-uppercase mt-5 mb-3 font-weight-bold">Transmission</h6>
+          <div class="mt-2 mb-2 pl-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="filter-size-2" name="transmisi" value="Auto">
+              <label class="custom-control-label" for="filter-size-2">Auto</label>
+            </div>
+          </div>
+          <div class="mt-2 mb-2 pl-2">
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="filter-size-3" name="transmisi" value="Manual">
+              <label class="custom-control-label" for="filter-size-3">Manual</label>
+            </div>
+          </div>
+          <div class="divider mt-5 mb-5 border-bottom border-secondary"></div>
+          <input type="submit" class="btn btn-lg btn-block btn-primary mt-5"></input>
+        </div>
+
+      </div>
+    </div>
+   </form>
+
+{% endblock sidebar %}

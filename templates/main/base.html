@@ -1,0 +1,70 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="fontawesome/fontawesome-free-5.14.0-web/css/all.css">
+  <link rel="stylesheet" href="{% static "css/Style.css" %}">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+
+  {% block additional %}
+  {% endblock additional %}
+</head>
+<body>
+  <header>
+    <div class="container-fluid p-0">
+      <nav class="navbar navbar-expand-lg">
+	      <a class="navbar-brand" href="{% url 'home' %}">
+          <i class="fas fa-car fa-2x mx-3"></i></i>RENTCAR </a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+          aria-label="Toggle navigation">
+          <i class="fas fa-align-right text-light"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <div class="mr-auto"></div>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+		    <a class="nav-link" href="{% url 'home' %}">HOME
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item active">
+		    <a class="nav-link" href="{% url 'list' %}?sort=Relevance">CAR LIST</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">CONTACT</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">ABOUT</a>
+            </li>
+	    {% if user.is_authenticated %}
+	    <li class="nav-item">
+		    <a href="{% url 'dashboard' %}">
+			    <button type="button" class="btn btn-primary">Dashboard</button>
+		    <a href="{% url 'logout' %}"><button type="button" class="btn btn-warning">Logout</button></a>
+		    </a>
+		    {% else %}
+            <li class="nav-item">
+		    <a href="{% url 'login' %}"><button type="button" class="btn btn-primary">Login</button></a>
+            </li>
+            <li class="nav-item">
+		    <a href="{% url 'register' %}"><button type="button" class="btn btn-warning">Register</button></a>
+		    {% endif %}
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+  </header>
+  {% block content %}
+  {% endblock content %}
+</body>

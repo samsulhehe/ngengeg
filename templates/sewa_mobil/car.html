@@ -1,0 +1,521 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block additional %}
+<title>Car List</title>
+<script src="{% static "js/main.js" %}"></script>
+ <link rel="stylesheet" href="{% static "css/car.css" %}">
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+{% endblock additional %}
+
+{% block content %}
+  <div class="container pt-5">
+    <div class="row">
+      <div class="col-md-8 order-md-2 col-lg-9">
+        <div class="container-fluid">
+          <div class="row   mb-5">
+            <div class="col-12">
+		                  <div class="dropdown text-md-left text-center float-md-left mb-3 mt-3 mt-md-0 mb-md-0">
+                <label class="mr-2">Sort by:</label>
+		{% if q %}
+		<a class="btn btn-lg btn-light dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{ q }}<span class="caret"></span></a>
+		{% else %}
+		<a class="btn btn-lg btn-light dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">Relevance<span class="caret"></span></a>
+		{% endif %}
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown" x-placement="bottom-start" style="position: absolute; transform: translate3d(71px, 48px, 0px); top: 0px; left: 0px; will-change: transform;">
+                  <a class="dropdown-item" href="?sort=Relevance">Relevance</a>
+		  <a class="dropdown-item" href="?sort=Price Descending">Price Descending</a>
+		  <a class="dropdown-item" href="?sort=Price Ascending">Price Ascending</a>
+                  <a class="dropdown-item" href="#">Best Selling</a>
+                </div>
+              </div>
+              <div class="btn-group float-md-right ml-3">
+                <button type="button" class="btn btn-lg btn-light"> <span class="fa fa-arrow-left"></span> </button>
+                <button type="button" class="btn btn-lg btn-light"> <span class="fa fa-arrow-right"></span> </button>
+              </div>
+            </div>
+          </div>
+    
+	  {% if q %}
+	  {% if q == "Price Ascending" %}
+          <div class="row">
+            {% for mobil in murah %}
+            {% if forloop.counter|divisibleby:3 == 0%}
+            <br>
+            {% endif %}
+            <div class="col-6 col-md-6 col-lg-4 mb-3">
+              <div class="card h-100 border-0">
+                <div class="card-img-top">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                </div>
+                <div class="card-body text-center">
+                  <h4 class="card-title">
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                  </h4>
+                  <h5 class="card-price small text-warning">
+                    <i>
+                    {{mobil.harga}}</i>
+                  </h5>
+                  {% if mobil.status == "Available" %}
+                    <p class="lead text-success">{{mobil.status}}</p>
+                  {% else %}
+                    <p class="lead text-danger">{{mobil.status}}</p>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col">
+                      <a href="{% url 'detail' mobil.slug %}">
+                      <button type="button" class="btn btn-secondary">Detail</button>
+                      </a>
+                    </div>
+                    {% if mobil.status == "Not Available" %}
+                        <div class="col">
+                        <button type="button" class="btn btn-primary disabled">Book</button>
+                    </div>
+                    {% else %}
+                        <div class="col">
+				<a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+                        <button type="button" class="btn btn-primary">Book</button>
+                      </a>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+	  {% endif %}
+
+
+	  {% if q == "Price Descending" %}
+          <div class="row">
+            {% for mobil in mahal %}
+            {% if forloop.counter|divisibleby:3 == 0%}
+            <br>
+            {% endif %}
+            <div class="col-6 col-md-6 col-lg-4 mb-3">
+              <div class="card h-100 border-0">
+                <div class="card-img-top">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                </div>
+                <div class="card-body text-center">
+                  <h4 class="card-title">
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                  </h4>
+                  <h5 class="card-price small text-warning">
+                    <i>
+                    {{mobil.harga}}</i>
+                  </h5>
+                  {% if mobil.status == "Available" %}
+                    <p class="lead text-success">{{mobil.status}}</p>
+                  {% else %}
+                    <p class="lead text-danger">{{mobil.status}}</p>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col">
+                      <a href="{% url 'detail' mobil.slug %}">
+                      <button type="button" class="btn btn-secondary">Detail</button>
+                      </a>
+                    </div>
+                    {% if mobil.status == "Not Available" %}
+                        <div class="col">
+                        <button type="button" class="btn btn-primary disabled">Book</button>
+                    </div>
+                    {% else %}
+                        <div class="col">
+				<a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+                        <button type="button" class="btn btn-primary">Book</button>
+                      </a>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+	  {% endif %}
+    {% if q == "Relevance" %}
+          <div class="row">
+            {% for mobil in relevance %}
+            {% if forloop.counter|divisibleby:3 == 0%}
+            <br>
+            {% endif %}
+            <div class="col-6 col-md-6 col-lg-4 mb-3">
+              <div class="card h-100 border-0">
+                <div class="card-img-top">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                </div>
+                <div class="card-body text-center">
+                  <h4 class="card-title">
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                  </h4>
+                  <h5 class="card-price small text-warning">
+                    <i>
+                    {{mobil.harga}}</i>
+                  </h5>
+                  {% if mobil.status == "Available" %}
+                    <p class="lead text-success">{{mobil.status}}</p>
+                  {% else %}
+                    <p class="lead text-danger">{{mobil.status}}</p>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col">
+                      <a href="{% url 'detail' mobil.slug %}">
+                      <button type="button" class="btn btn-secondary">Detail</button>
+                      </a>
+                    </div>
+                    {% if mobil.status == "Not Available" %}
+                        <div class="col">
+                        <button type="button" class="btn btn-primary disabled">Book</button>
+                    </div>
+                    {% else %}
+                        <div class="col">
+				<a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+                        <button type="button" class="btn btn-primary">Book</button>
+                      </a>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+	  {% endif %}
+	  {% elif request.method == "POST" %}
+		
+	  {% if q == "Price Ascending" %}
+          <div class="row">
+            {% for mobil in murah %}
+            {% if forloop.counter|divisibleby:3 == 0%}
+            <br>
+            {% endif %}
+            <div class="col-6 col-md-6 col-lg-4 mb-3">
+              <div class="card h-100 border-0">
+                <div class="card-img-top">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                </div>
+                <div class="card-body text-center">
+                  <h4 class="card-title">
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                  </h4>
+                  <h5 class="card-price small text-warning">
+                    <i>
+                    {{mobil.harga}}</i>
+                  </h5>
+                  {% if mobil.status == "Available" %}
+                    <p class="lead text-success">{{mobil.status}}</p>
+                  {% else %}
+                    <p class="lead text-danger">{{mobil.status}}</p>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col">
+                      <a href="{% url 'detail' mobil.slug %}">
+                      <button type="button" class="btn btn-secondary">Detail</button>
+                      </a>
+                    </div>
+                    {% if mobil.status == "Not Available" %}
+                        <div class="col">
+                        <button type="button" class="btn btn-primary disabled">Book</button>
+                    </div>
+                    {% else %}
+                        <div class="col">
+				<a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+                        <button type="button" class="btn btn-primary">Book</button>
+                      </a>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+	  {% endif %}
+
+
+	  {% if q == "Price Descending" %}
+          <div class="row">
+            {% for mobil in mahal %}
+            {% if forloop.counter|divisibleby:3 == 0%}
+            <br>
+            {% endif %}
+            <div class="col-6 col-md-6 col-lg-4 mb-3">
+              <div class="card h-100 border-0">
+                <div class="card-img-top">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                </div>
+                <div class="card-body text-center">
+                  <h4 class="card-title">
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                  </h4>
+                  <h5 class="card-price small text-warning">
+                    <i>
+                    {{mobil.harga}}</i>
+                  </h5>
+                  {% if mobil.status == "Available" %}
+                    <p class="lead text-success">{{mobil.status}}</p>
+                  {% else %}
+                    <p class="lead text-danger">{{mobil.status}}</p>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col">
+                      <a href="{% url 'detail' mobil.slug %}">
+                      <button type="button" class="btn btn-secondary">Detail</button>
+                      </a>
+                    </div>
+                    {% if mobil.status == "Not Available" %}
+                        <div class="col">
+                        <button type="button" class="btn btn-primary disabled">Book</button>
+                    </div>
+                    {% else %}
+                        <div class="col">
+				<a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+                        <button type="button" class="btn btn-primary">Book</button>
+                      </a>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+	  {% endif %}
+    {% if q == "Relevance" %}
+          <div class="row">
+            {% for mobil in relevance %}
+            {% if forloop.counter|divisibleby:3 == 0%}
+            <br>
+            {% endif %}
+            <div class="col-6 col-md-6 col-lg-4 mb-3">
+              <div class="card h-100 border-0">
+                <div class="card-img-top">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                </div>
+                <div class="card-body text-center">
+                  <h4 class="card-title">
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                  </h4>
+                  <h5 class="card-price small text-warning">
+                    <i>
+                    {{mobil.harga}}</i>
+                  </h5>
+                  {% if mobil.status == "Available" %}
+                    <p class="lead text-success">{{mobil.status}}</p>
+                  {% else %}
+                    <p class="lead text-danger">{{mobil.status}}</p>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col">
+                      <a href="{% url 'detail' mobil.slug %}">
+                      <button type="button" class="btn btn-secondary">Detail</button>
+                      </a>
+                    </div>
+                    {% if mobil.status == "Not Available" %}
+                        <div class="col">
+                        <button type="button" class="btn btn-primary disabled">Book</button>
+                    </div>
+                    {% else %}
+                        <div class="col">
+				<a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+                        <button type="button" class="btn btn-primary">Book</button>
+                      </a>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+	  {% endif %}
+	  {% else %}
+          <div class="row">
+            {% for mobil in relevance %}
+            {% if forloop.counter|divisibleby:3 == 0%}
+            <br>
+            {% endif %}
+            <div class="col-6 col-md-6 col-lg-4 mb-3">
+              <div class="card h-100 border-0">
+                <div class="card-img-top">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                </div>
+                <div class="card-body text-center">
+                  <h4 class="card-title">
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                  </h4>
+                  <h5 class="card-price small text-warning">
+                    <i>
+                    {{mobil.harga}}</i>
+                  </h5>
+                  {% if mobil.status == "Available" %}
+                    <p class="lead text-success">{{mobil.status}}</p>
+                  {% else %}
+                    <p class="lead text-danger">{{mobil.status}}</p>
+                  {% endif %}
+                  <div class="row">
+                    <div class="col">
+                      <a href="{% url 'detail' mobil.slug %}">
+                      <button type="button" class="btn btn-secondary">Detail</button>
+                      </a>
+                    </div>
+                    {% if mobil.status == "Not Available" %}
+                        <div class="col">
+                        <button type="button" class="btn btn-primary disabled">Book</button>
+                    </div>
+                    {% else %}
+                        <div class="col">
+				<a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+                        <button type="button" class="btn btn-primary">Book</button>
+                      </a>
+                    </div>
+                    {% endif %}
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+	  {% endif %}
+
+          <div class="row sorting mb-5 mt-5">
+            <div class="col-12">
+              <button id="toTop" class="btn btn-light" onclick="topFunction()">
+                <i class="fas fa-arrow-up mr-2"></i> Back to top</button>
+                <div class="btn-group float-md-right ml-3">
+                </div>
+					<script>
+						mybutton = document.getElementById("toTop");
+
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+					</script>
+
+              </div>
+            </div>
+          </div>
+          {% include 'sewa_mobil/sidebar.html' %}
+<br><br>
+    <footer class="page-footer font-small unique-color-dark">
+
+      <div style="background-color: #6351ce;">
+        <div class="container">
+
+          <!-- Grid row-->
+          <div class="row py-4 d-flex align-items-center">
+
+            <!-- Grid column -->
+            <div class="col-md-6 col-lg-5 text-center text-md-left mb-4 mb-md-0">
+              <h6 class="mb-0">Get connected with us on social networks!</h6>
+            </div>
+            <!-- Grid column -->
+
+            <!-- Grid column -->
+            <div class="col-md-6 col-lg-7 text-center text-md-right">
+
+              <!-- Facebook -->
+              <a class="fb-ic">
+                <i class="fab fa-facebook-f white-text mr-4"> </i>
+              </a>
+              <!-- Twitter -->
+              <a class="tw-ic">
+                <i class="fab fa-twitter white-text mr-4"> </i>
+              </a>
+              <!-- Google +-->
+              <a class="gplus-ic">
+                <i class="fab fa-google-plus-g white-text mr-4"> </i>
+              </a>
+              <!--Linkedin -->
+              <a class="li-ic">
+                <i class="fab fa-linkedin-in white-text mr-4"> </i>
+              </a>
+              <!--Instagram-->
+              <a class="ins-ic">
+                <i class="fab fa-instagram white-text"> </i>
+              </a>
+
+            </div>
+            <!-- Grid column -->
+
+          </div>
+          <!-- Grid row-->
+
+        </div>
+      </div>
+      
+      <!-- Footer Links -->
+      <div class="container text-center text-md-left mt-5">
+
+        <!-- Grid row -->
+        <div class="row mt-3">
+
+          <!-- Grid column -->
+          <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+
+            <!-- Content -->
+            <h6 class="text-uppercase font-weight-bold">RENTCAR</h6>
+            <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; color: blue;">
+            <p>Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit amet,
+              consectetur
+            adipisicing elit.</p>
+
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+            <h6 class="text-uppercase font-weight-bold">MENU</h6>
+            <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px; color: blue;">
+            <p>
+              <a href="#!">HOME</a>
+            </p>
+            <p>
+              <a href="#!">CAR LIST</a>
+            </p>
+            <p>
+              <a href="#!">CONTACT</a>
+            </p>
+            <p>
+              <a href="#!">ABOUT</a>
+            </p>
+
+          </div>
+          <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+            <h6 class="text-uppercase font-weight-bold">Contact</h6>
+            <hr class="deep-purple accent-2 mb-4 mt-0 d-inline-block mx-auto" style="width: 60px;">
+            <p>
+              <i class="fas fa-home mr-3"></i> Malang, NY 10012, US</p>
+              <p>
+                <i class="fas fa-envelope mr-3"></i>achmadsymsl87@gmail.com</p>
+                <p>
+                  <i class="fas fa-phone mr-3"></i> + 221 234 567 88</p>
+                  <p>
+                    <i class="fas fa-print mr-3"></i>+921 211 324</p>
+                  </div>
+                </div>
+              </div>
+            </footer>
+            <!-- js -->
+	  {% endblock content %}
