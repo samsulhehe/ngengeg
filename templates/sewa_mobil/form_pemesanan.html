@@ -14,6 +14,7 @@
 		{% load crispy_forms_tags %}
 		{% csrf_token %}
 		{{ form | crispy }}
+		<p class="text-muted">*Harga dihitung perhari</p>
 		<input type="submit" value="pesan">
 	</form>
 	{% endif %}

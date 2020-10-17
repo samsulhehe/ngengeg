@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %}
+
+{% block additional %}
+<style>
+.card {
+        margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 10px; /* Added */
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+	<form method="POST">
+
+	<h3>Apakah anda yakin ingin melanjutkan pembayaran?</h3>
+	<p> Harga: {{ harga }} </p>
+	<input type="submit" class="btn btn-primary">
+	</form>
+</div>
+
+{% endblock %}

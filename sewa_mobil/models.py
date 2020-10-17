@@ -73,24 +73,66 @@ class Pesanan(models.Model):
 
     KK = models.ImageField(upload_to='img/kk')
 
-    harga = models.IntegerField(blank=True, null=True)
+    harga = models.IntegerField(editable=False, null=True, blank=True)
 
     tgl_pesan = models.DateField()
 
     tgl_kembali = models.DateField()
 
-    denda = models.IntegerField(blank=True, null=True)
+    denda = models.FloatField(blank=True, null=True)
 
     total = models.IntegerField(blank=True, null=True)
 
-    selesai = models.BooleanField(default=False, blank=True)
+    selesai_choice = (
+            ('Menunggu Konfirmasi', 'Menunggu Konfirmasi'),
+            ('Sedang Dipakai', 'Sedang Dipakai'),
+            ('Selesai', 'Selesai'),
+            )
+
+    selesai = models.CharField(max_length=100, choices=selesai_choice, default="Menunggu Konfirmasi")
 
     approved = models.BooleanField(default=False, blank=True)
 
+    def save(self, *args, **kwargs):
+        date_format = "%Y-%m-%d"
+        pesan = datetime.datetime.strptime(str(self.tgl_pesan), date_format)
+        kembali = datetime.datetime.strptime(str(self.tgl_kembali), date_format)
+        delta = kembali - pesan
+
+
+        self.harga = abs(delta.days * self.mobil.harga)
+
+        if self.selesai == "Selesai":
+
+            dipulangkan = str(datetime.datetime.now().strftime(date_format))
+            dipulangkan = datetime.datetime.strptime(dipulangkan, date_format)
+
+            if kembali != dipulangkan:
+                ndenda = dipulangkan - kembali
+
+                self.denda = 0.3
+
+                ntotal = self.harga * self.denda
+
+                self.total = abs(self.harga + ntotal)
+            else:
+                self.denda = 0
+                self.total = self.harga
+
+        super(Pesanan, self).save(*args, **kwargs)
+
     def __str__(self):
-        return '{}({}) - {}-APPROVED:{}'.format(self.nama,self.mobil, self.user, self.approved)
-
-
-
+        return '{}({}) - {}-APPROVED:{} - STATUS: {}'.format(self.nama,self.mobil, self.user, self.approved, self.selesai)
     
 
+class Testimoni(models.Model):
+    mobil = models.ForeignKey(Mobil, on_delete=models.CASCADE)
+    nama = UserForeignKey(auto_user_add=True)
+    isi = models.TextField()
+    dibuat_pada = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['dibuat_pada']
+
+    def __str__(self):
+        return f'Komentar {self.isi} oleh {self.nama}'
