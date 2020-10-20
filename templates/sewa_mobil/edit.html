@@ -1,0 +1,18 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<h3>Edit post</h3>
+<form method="POST" enctype="multipart/form-data">
+{% csrf_token %}
+{% load crispy_forms_tags  %}
+{{ form | crispy }}
+
+<div style="display:flex">
+<button value="save" class="btn btn-primary" type="submit">Save</button>
+</form>
+<form method="POST" action="{% url 'delete' %}?testi={{ q  }}">
+{% csrf_token %}
+<button value="delete" class="btn btn-primary"  type="submit">Delete</button>
+</div>
+{% endblock %}
+

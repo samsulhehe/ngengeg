@@ -35,7 +35,7 @@ def car_list(request):
 
         elif kategori:
             for i in kategori:
-                filtered = mobil_all.filter(Q(tipe=i))
+                filtered = mobil_all.filter(Q(tipe__in=kategori))
 
         elif transmisi:
             for i in transmisi:
@@ -88,7 +88,7 @@ def pesanan_view(request):
                 terpesan = True
                 mobil.status = 'Not Available'
                 mobil.save()
-                pesanan = form_pesan.save()
+                form_pesan.save()
 
             return HttpResponseRedirect(reverse('dashboard'))
         else:
@@ -106,6 +106,7 @@ def detail_view(request, slug):
     model = get_object_or_404(Mobil, slug=slug)
     testimoni_baru = None
     testimoni_ = Testimoni.objects.filter(mobil__id=model.id)
+
     
     if request.method == "POST":
         testimoni = FormTestimoni(data=request.POST)
@@ -119,7 +120,12 @@ def detail_view(request, slug):
     else:
         testimoni = FormTestimoni()
 
-    return render(request, 'sewa_mobil/product-detail.html', {'mobil':model, 'testi':testimoni, 'testi_baru':testimoni_baru, 'testimoni':testimoni_})
+    id_ = 0
+    for t in testimoni_:
+        if t.nama == request.user:
+            id_ = t.id
+
+    return render(request, 'sewa_mobil/product-detail.html', {'mobil':model, 'testi':testimoni, 'testi_baru':testimoni_baru, 'testimoni':testimoni_, 'testi_id':id_})
 
 def batal_pesan(request):
     
@@ -139,4 +145,44 @@ def batal_pesan(request):
             HttpResponseForbidden()
 
     return render(request, 'sewa_mobil/batal_pesan.html')
- 
+
+
+@login_required
+def edit(request, id=None):
+    template_name = 'sewa_mobil/edit.html'
+    q = request.GET.get('testi')
+    if q:
+        testi = get_object_or_404(Testimoni, id=q)
+        if testi.nama != request.user:
+            return HttpResponseForbidden()
+    else:
+        testi = get_object_or_404(Testimoni, id=id)
+
+    form = FormTestimoni(request.POST or None, instance=testi)
+
+    if request.POST and form.is_valid():
+        form.save()
+
+        return HttpResponseRedirect(("detail/" + str(testi.mobil.plat).lower()))
+
+    return render(request, template_name, {
+        'form': form,
+        'q':q,
+        'testi':testi,
+    })
+
+@login_required
+def delete_view(request):
+
+    template_name = 'sewa_mobil/delete.html'
+    q = request.GET.get("testi")
+    if request.method == 'POST':
+        if q:
+            testi = get_object_or_404(Testimoni, id=q)
+            if request.user == testi.nama:
+                testi.delete()
+            else:
+                return HttpResponseForbidden()
+
+    return render(request, template_name, {'q':q})
+

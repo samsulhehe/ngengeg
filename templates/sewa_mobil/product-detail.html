@@ -75,8 +75,12 @@
 
             {{ t.nama }}
             <span class=" text-muted font-weight-normal">
-              {{ t.dibuat_pada }}
             </span>
+	    {% if t.nama == request.user %}
+	    <a href="{% url 'edit'%}?testi={{ testi_id }}">
+		    <i class="fa fa-trash" aria-hidden="true"></i></a>
+	    {% endif %}
+
           </p>
           {{ t.isi | linebreaks }}
         </div>
@@ -89,7 +93,8 @@
         <h3>Tinggalkan sebuah testimoni:</h3>
             <p>Testimoni sebagai: <strong>{{ user }}</strong></p>
         <form id="com" method="post">
-          {{ testi.as_p }}
+	  {% load crispy_forms_tags %}
+          {{ testi | crispy }}
           {% csrf_token %}
           <button type="submit" class="btn btn-primary  btn-lg">Kirim!</button>
             {% else %}

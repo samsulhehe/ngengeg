@@ -1,9 +1,11 @@
 from django.db import models
 from django.utils.text import slugify
+from django.db.models import Q
 
 from django_userforeignkey.models.fields import UserForeignKey
 
 import datetime
+
 
 class Mobil(models.Model):
     nama = models.CharField(max_length=100, default="")
@@ -75,23 +77,21 @@ class Pesanan(models.Model):
 
     harga = models.IntegerField(editable=False, null=True, blank=True)
 
+    pesanan_dibuat = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
     tgl_pesan = models.DateField()
 
     tgl_kembali = models.DateField()
 
     denda = models.FloatField(blank=True, null=True)
-
+    
     total = models.IntegerField(blank=True, null=True)
 
-    selesai_choice = (
-            ('Menunggu Konfirmasi', 'Menunggu Konfirmasi'),
-            ('Sedang Dipakai', 'Sedang Dipakai'),
-            ('Selesai', 'Selesai'),
-            )
+    approved = models.BooleanField(blank=True, null=True, default=False)
 
-    selesai = models.CharField(max_length=100, choices=selesai_choice, default="Menunggu Konfirmasi")
+    selesai = models.BooleanField(blank=True, null=True)
 
-    approved = models.BooleanField(default=False, blank=True)
+    tanggal_selesai = models.DateField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         date_format = "%Y-%m-%d"
@@ -102,19 +102,29 @@ class Pesanan(models.Model):
 
         self.harga = abs(delta.days * self.mobil.harga)
 
-        if self.selesai == "Selesai":
+        if self.selesai:
 
             dipulangkan = str(datetime.datetime.now().strftime(date_format))
             dipulangkan = datetime.datetime.strptime(dipulangkan, date_format)
 
             if kembali != dipulangkan:
-                ndenda = dipulangkan - kembali
 
                 self.denda = 0.3
 
-                ntotal = self.harga * self.denda
+                # Hari pengembalian - kepulangan
+                delta_ = dipulangkan - kembali
 
+                hari = delta_.days 
+
+                # Mendapatkan denda perbanyaknya hari terlambat
+                perhari = hari * self.denda
+
+                ntotal = self.harga * perhari
+    
                 self.total = abs(self.harga + ntotal)
+
+                self.tanggal_selesai = datetime.datetime.now().strftime(date_format)
+
             else:
                 self.denda = 0
                 self.total = self.harga
@@ -122,17 +132,28 @@ class Pesanan(models.Model):
         super(Pesanan, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '{}({}) - {}-APPROVED:{} - STATUS: {}'.format(self.nama,self.mobil, self.user, self.approved, self.selesai)
+
+        if self.selesai and self.approved:
+            return '{}({}) - {} - STATUS: Selesai'.format(self.nama,self.mobil, self.user)
+
+        elif self.approved:
+            return '{}({}) - {} - STATUS: Sedang dipakai'.format(self.nama,self.mobil, self.user)
+
+        else: 
+            return '{}({}) - {} - STATUS: Menunggu Konfirmasi'.format(self.nama,self.mobil, self.user)
+            
+
     
 
 class Testimoni(models.Model):
     mobil = models.ForeignKey(Mobil, on_delete=models.CASCADE)
     nama = UserForeignKey(auto_user_add=True)
     isi = models.TextField()
-    dibuat_pada = models.DateTimeField(auto_now_add=True)
+    dibuat_pada = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
 
     class Meta:
         ordering = ['dibuat_pada']
 
     def __str__(self):
-        return f'Komentar {self.isi} oleh {self.nama}'
+        return f'Testimoni {self.isi} oleh {self.nama}'

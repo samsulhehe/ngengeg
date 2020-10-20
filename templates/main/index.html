@@ -84,38 +84,31 @@
     <section class="section-3 container-fluid p-0 text-center">
       <div class="row">
         <div class="col-md-12 col-sm-12">
-          <h1>Download Our App for all Platform</h1>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eum exercitationem alias perspiciatis omnis quod possimus odit
-            voluptatum! Sunt ea quasi praesentium, tenetur doloribus animi obcaecati, sint nemo quae laudantium iusto unde
-            eaque nostrum nobis voluptatum
+          <h1>Testimoni</h1>
           </p>
         </div>
       </div>
-      <div class="platform row">
-        <div class="col-md-6 col-sm-12 text-right">
-          <div class="desktop shadow-lg">
-            <div class="d-flex flex-row justify-content-center">
-              <i class="fas fa-desktop fa-3x py-2 pr-3"></i>
-              <div class="text text-left">
-                <h3 class="pt-1 m-0">Desktop</h3>
-                <p class="p-0 m-0">On website</p>
-              </div>
-            </div>
-          </div>
+      <div class="container">
+    <div class="row">
+            {% autoescape off %}
+            {% for t in testi %}
+        <div style="padding:20px;" class="col-sm-12 col-lg-6 align-items-stretch">
+            <div class="card mb-4 h-100">
+                <div class="card-body">
+                        <div class="article">
+				<p class="text-muted">{{ t.mobil.nama  }} | {{ t.mobil.plat  }} | {{ t.dibuat_pada }} | {{ t.nama }}</p>
+                    <p class="card-text">{{ t.isi|truncatechars_html:100 }}</p>
+                    <p>---------------------</p>
+                        </div>
+                </div>
+
         </div>
-        <div class="col-md-6 col-sm-12 text-left">
-          <div class="desktop shadow-lg">
-            <div class="d-flex flex-row justify-content-center">
-              <i class="fas fa-mobile-alt fa-3x py-2 pr-3"></i>
-              <div class="text text-left">
-                <h3 class="pt-1 m-0">On Mobile</h3>
-                <p class="p-0 m-0">On Play Store</p>
-              </div>
             </div>
-          </div>
-        </div>
-      </div>
+
+            {% endfor %}
+        {% endautoescape %}
+    </div>
+</div>
     </section>
 
   </main>

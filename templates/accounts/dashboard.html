@@ -1,54 +1,69 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% block additional %}
+
+<title>Dashboard {{ user }}</title>
+{% endblock %}
 
 {% block content %}
-<body>
-	<div class="jumbotron">
-		<div class="text-center">
-	<h1>Dashboard</h1>
-	<h2>Welcome back {{user}}</h2>
-		</div>
-		{% for p in pesanan %}
-		<div class="card mb-4 h-100">
+
+<div class="container">
+    <div class="row">
+            {% autoescape off %}
+            {% for p in pesanan %}
+        <div style="padding:20px;" class="col-sm-12 col-lg-6 align-items-stretch">
+            <div class="card mb-4 h-100">
                 <div class="card-body">
                         <div class="article">
-				<h2 class="card-title">Pesanan {{ p.mobil.plat  }}-{{ p.user }}</h2>
-				{% if p.approved %}
+				<h2 class="card-title">Pesanan {{ user }}-{{ p.mobil.plat  }}</h2>
+				 {% if p.selesai and p.approved %}
 
-				{% if p.selesai == "Selesai" %}
-				<h3>Status: Selesai</h3>
+                                <h3>Status: Selesai</h3>
+                                {% elif p.approved %}
 
-				{% else %}
-				<h3>Status: Sedang dipesan/dipakai</h3>
+                                <h3>Status: Sedang dipakai</h3>
 
-				{% endif %}
-				{% else %}
-				<h3>Status: Menunggu Konfirmasi</h3>
-				{% endif %}
+                                {% else %}
+
+                                <h3>Status: Menunggu konfirmasi</h3>
+
+                                {% endif %}
+
                     <p class="card-text text-muted h6">{{ p.mobil.nama }} | {{ p.mobil.plat }} </p>
-                        </div>
-			<img style="max-width:400px; max-height:400px" src="{{ p.mobil.gambar.url }}">
-			<p>Tanggal Pemesanan: {{ p.tgl_pesan }}</p>
-			<p>Tanggal Kembali: {{ p.tgl_kembali }}</p>
-			<p>Harga: {{ p.harga }}</p>
-			{% if p.selesai == "Selesai" %}
-			{% if p.denda == 0.3 %}
-			<p>Denda: 30%</p>
-			{% else %}
-			<p>Denda: 0</p>
-			{% endif %}
+ 		<img style="max-width:400px; max-height:400px" src="{{ p.mobil.gambar.url }}">
 
-			<p>Total: {{ p.total }}</p>
-			{% endif %}
+                    <p>---------------------</p>
+                        <p>Pesanan Dibuat: {{ p.pesanan_dibuat  }}</p>
+                        <p>Tanggal Mobil diambil: {{ p.tgl_pesan }}</p>
+                        <p>Tanggal Kembali: {{ p.tgl_kembali }}</p>
+                        <p>Harga: {{ p.harga }} ({{ hari }} hari)</p>
+
+                        {% if p.selesai %}
+                        <p>Tanggal Selesai: {{ p.tanggal_selesai }}</p>
+                        {% if p.denda == 0.3 %}
+                        <p>Denda: 30% x Keterlambatan</p>
+                        {% else %}
+                        <p>Denda: 0</p>
+                        {% endif %}
+
+                        <p>Total: {{ p.total }}</p>
+                        {% endif %}
+
+                        </div>
                 </div>
-		{% if p.selesai != "Selesai" %}
-		<form method="POST" action="{% url 'batal' %}?plat={{ p.mobil.plat }}">
-			{% csrf_token %}
-			<button value="batal" class="btn btn-primary" type="submit">Batalkan Pesanan</button>
-		</form>
-		{% endif %}
+                {% if not p.selesai  %}
+                <form method="POST" action="{% url 'batal' %}?plat={{ p.mobil.plat }}">
+                        {% csrf_token %}
+                        <button value="batal" class="btn btn-primary" type="submit">Batalkan Pesanan</button>
+                </form>
+                {% endif %}
+
         </div>
-{% endfor %}
-	</div>
-</body>
+            </div>
+
+            {% endfor %}
+        {% endautoescape %}
+    </div>
+</div>
+
 {% endblock %}

@@ -5,6 +5,8 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+import datetime
+
 from sewa_mobil.models import Pesanan
 from .forms import UserForm
 
@@ -61,7 +63,26 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('home'))
 
 
+@login_required
 def dashboard_view(request):
     pesanan = Pesanan.objects.filter(user=request.user)
 
-    return render(request, 'accounts/dashboard.html', {'pesanan':pesanan})
+    date_format = "%Y-%m-%d"
+    
+    i = 0
+    
+    if len(pesanan) > 0:
+        for x in pesanan:
+            
+            pesan = datetime.datetime.strptime(str(pesanan[i].tgl_pesan), date_format)
+            kembali = datetime.datetime.strptime(str(pesanan[i].tgl_kembali), date_format)
+
+            hari = kembali - pesan
+            i+=1
+
+    if len(pesanan) > 0:
+        return render(request, 'accounts/dashboard.html', {'pesanan':pesanan, 'hari':hari.days})
+    else:
+        return render(request, 'accounts/dashboard.html')
+
+
