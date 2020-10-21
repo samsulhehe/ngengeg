@@ -146,18 +146,15 @@ def batal_pesan(request):
     
     q = request.GET.get("plat")
 
-    if request.method == 'POST':
-        if q:
-            pesanan = get_object_or_404(Pesanan, mobil__plat=q)
-            if request.user == pesanan.user:
-                mobil = get_object_or_404(Mobil, plat=q)
-                mobil.status = "Available"
-                mobil.save()
-                pesanan.delete()
-            else:
-                return HttpResponseForbidden()
+    if q:
+        pesanan = get_object_or_404(Pesanan, mobil__plat=q)
+        if request.user == pesanan.user:
+            mobil = get_object_or_404(Mobil, plat=q)
+            mobil.status = "Available"
+            mobil.save()
+            pesanan.delete()
         else:
-            HttpResponseForbidden()
+            return HttpResponseForbidden()
 
     return render(request, 'sewa_mobil/batal_pesan.html')
 

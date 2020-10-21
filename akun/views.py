@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 import datetime
 
-from sewa_mobil.models import Pesanan
+from sewa_mobil.models import Pesanan, Mobil
 from .forms import UserForm
 
 def register_view(request):
@@ -83,6 +83,20 @@ def dashboard_view(request):
 
             hari = kembali - pesan
             i+=1
+
+    q = request.GET.get("plat")
+
+    if q:
+        pesanan_ = get_object_or_404(Pesanan, mobil__plat=q)
+        if request.user == pesanan_.user:
+            mobil = get_object_or_404(Mobil, plat=q)
+            mobil.status = "Available"
+            mobil.save()
+            pesanan_.delete()
+            return HttpResponseRedirect(reverse("dashboard"))
+        else:
+            return HttpResponseForbidden()
+
 
     if len(pesanan) > 0:
         return render(request, 'accounts/dashboard.html', {'pesanan':pesanan, 'hari':hari.days, 'low':low})
