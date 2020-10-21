@@ -79,18 +79,31 @@ def pesanan_view(request):
         form_pesan = FormPesanan(request.POST, request.FILES)
 
         if form_pesan.is_valid():
-            status = form_pesan.cleaned_data['mobil']
-            mobil = Mobil.objects.get(id=status.id)
 
-            if mobil.status == "Not Available":
-                return HttpResponse("Mobil tidak Tersedia")
+            tgl_pesan = form_pesan.cleaned_data['tgl_pesan']
+            tgl_kembali = form_pesan.cleaned_data['tgl_kembali']
+
+            date_format = "%Y-%m-%d"
+
+            pesan = datetime.strptime(str(tgl_pesan), date_format)
+            kembali = datetime.strptime(str(tgl_kembali), date_format)
+            delta = kembali - pesan
+
+            if delta.days > 30 or delta.days < 1:
+                return HttpResponse("Masukkan lama peminjaman yang valid! Batas adalah 30 hari dan minimal adalah satu hari. Yang anda masukkan: {}".format(delta))
             else:
-                terpesan = True
-                mobil.status = 'Not Available'
-                mobil.save()
-                form_pesan.save()
+                status = form_pesan.cleaned_data['mobil']
+                mobil = Mobil.objects.get(id=status.id)
 
-            return HttpResponseRedirect(reverse('dashboard'))
+                if mobil.status == "Not Available":
+                    return HttpResponse("Mobil tidak Tersedia")
+                else:
+                    terpesan = True
+                    mobil.status = 'Not Available'
+                    mobil.save()
+                    form_pesan.save()
+
+                return HttpResponseRedirect(reverse('dashboard'))
         else:
             print(form_pesan.errors)
     else:
@@ -106,6 +119,7 @@ def detail_view(request, slug):
     model = get_object_or_404(Mobil, slug=slug)
     testimoni_baru = None
     testimoni_ = Testimoni.objects.filter(mobil__id=model.id)
+    pesanan = Pesanan.objects.filter(Q(mobil=model) & Q(selesai=True) & Q(user=request.user))
 
     
     if request.method == "POST":
@@ -113,6 +127,7 @@ def detail_view(request, slug):
         if testimoni.is_valid():
             testimoni_baru = testimoni.save(commit=False)
             testimoni_baru.mobil = model
+            testimoni_baru.nama = request.user
             testimoni_baru.save()
             testimoni = FormTestimoni()
         else:
@@ -125,7 +140,7 @@ def detail_view(request, slug):
         if t.nama == request.user:
             id_ = t.id
 
-    return render(request, 'sewa_mobil/product-detail.html', {'mobil':model, 'testi':testimoni, 'testi_baru':testimoni_baru, 'testimoni':testimoni_, 'testi_id':id_})
+    return render(request, 'sewa_mobil/product-detail.html', {'mobil':model, 'testi':testimoni, 'testi_baru':testimoni_baru, 'testimoni':testimoni_, 'testi_id':id_, 'pesanan':pesanan})
 
 def batal_pesan(request):
     

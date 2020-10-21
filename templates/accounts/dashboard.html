@@ -51,13 +51,17 @@
 
                         </div>
                 </div>
-                {% if not p.selesai  %}
+                {% if not p.approved %}
                 <form method="POST" action="{% url 'batal' %}?plat={{ p.mobil.plat }}">
                         {% csrf_token %}
                         <button value="batal" class="btn btn-primary" type="submit">Batalkan Pesanan</button>
                 </form>
                 {% endif %}
-
+		{% if p.selesai %}	
+		<a href="{% url 'detail' low %}#testi">
+                        <button value="batal" class="btn btn-primary" type="submit">Beri Testi</button>
+                </a>
+		{% endif %}
         </div>
             </div>
 

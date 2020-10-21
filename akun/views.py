@@ -66,6 +66,10 @@ def logout_view(request):
 @login_required
 def dashboard_view(request):
     pesanan = Pesanan.objects.filter(user=request.user)
+    j = 0
+    for y in pesanan:
+        low = pesanan[j].mobil.plat.lower()
+        j += 1
 
     date_format = "%Y-%m-%d"
     
@@ -81,7 +85,7 @@ def dashboard_view(request):
             i+=1
 
     if len(pesanan) > 0:
-        return render(request, 'accounts/dashboard.html', {'pesanan':pesanan, 'hari':hari.days})
+        return render(request, 'accounts/dashboard.html', {'pesanan':pesanan, 'hari':hari.days, 'low':low})
     else:
         return render(request, 'accounts/dashboard.html')
 

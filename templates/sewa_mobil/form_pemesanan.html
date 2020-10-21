@@ -14,7 +14,7 @@
 		{% load crispy_forms_tags %}
 		{% csrf_token %}
 		{{ form | crispy }}
-		<p class="text-muted">*Harga dihitung perhari</p>
+		<p class="text-muted">*Harga dihitung perhari dengan lama peminjaman maksimal 30 hari</p>
 		<input type="submit" value="pesan">
 	</form>
 	{% endif %}

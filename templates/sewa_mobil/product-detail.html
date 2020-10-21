@@ -67,7 +67,7 @@
 </div>
  <div class="col-md-8 card mb-4  mt-3 ">
       <div class="card-body">
-        <h2>{{ testimoni.count }} Testimoni</h2>
+        <h2 id="testi">{{ testimoni.count }} Testimoni</h2>
 
         {% for t in testimoni %}
         <div class="comments" style="padding: 10px;">
@@ -89,7 +89,7 @@
     </div>
     <div class="col-md-8 card mb-4  mt-3 ">
       <div class="card-body">
-          {% if user.is_active %}
+	  {% if pesanan.count > 0  %}
         <h3>Tinggalkan sebuah testimoni:</h3>
             <p>Testimoni sebagai: <strong>{{ user }}</strong></p>
         <form id="com" method="post">
@@ -97,9 +97,7 @@
           {{ testi | crispy }}
           {% csrf_token %}
           <button type="submit" class="btn btn-primary  btn-lg">Kirim!</button>
-            {% else %}
-                    <h3>Anda harus <a href="{% url 'login' %}">Login</a> untuk memposting Testimoni</h3>
-        {% endif %}
+	  {% endif %}
         </form>
       </div>
     </div>

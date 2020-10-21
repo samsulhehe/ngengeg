@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 from django_userforeignkey.models.fields import UserForeignKey
 
@@ -147,11 +148,10 @@ class Pesanan(models.Model):
 
 class Testimoni(models.Model):
     mobil = models.ForeignKey(Mobil, on_delete=models.CASCADE)
-    nama = UserForeignKey(auto_user_add=True)
+    nama = models.ForeignKey(User, on_delete=models.CASCADE)
     isi = models.TextField()
     dibuat_pada = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-
-
+    
     class Meta:
         ordering = ['dibuat_pada']
 
