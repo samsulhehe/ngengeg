@@ -57,7 +57,7 @@
                 </a>
                 {% endif %}
 		{% if p.selesai %}	
-		<a href="{% url 'detail' low %}#testi">
+		<a href="{% url 'detail' p.mobil.plat|lower %}#testi">
                         <button value="batal" class="btn btn-primary" type="submit">Beri Testi</button>
                 </a>
 		{% endif %}

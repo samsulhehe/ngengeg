@@ -153,7 +153,7 @@ class Testimoni(models.Model):
     dibuat_pada = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     
     class Meta:
-        ordering = ['dibuat_pada']
+        ordering = ['-dibuat_pada']
 
     def __str__(self):
         return f'Testimoni {self.isi} oleh {self.nama}'
