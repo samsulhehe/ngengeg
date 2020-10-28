@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Pesanan, Testimoni
+from .models import Mobil, Pesanan, Testimoni
 
 class FormPesanan(forms.ModelForm):
     class Meta:

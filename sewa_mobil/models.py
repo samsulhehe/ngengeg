@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 
 from django_userforeignkey.models.fields import UserForeignKey
 
+from django.contrib.contenttypes.fields import GenericRelation
+
+from star_ratings.models import Rating
+
 import datetime
 
 
@@ -46,6 +50,8 @@ class Mobil(models.Model):
     transmisi = models.CharField(max_length=10, default="Manual", choices=[('Auto', 'Auto'),('Manual', 'Manual')])
 
     status = models.CharField(max_length=20, choices=status_choices, default="Available")
+
+    ratings = GenericRelation(Rating, related_query_name='mobil')
 
     slug = models.SlugField(blank=True, editable=False)
 

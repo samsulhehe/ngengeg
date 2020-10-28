@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_filters',
     'django_userforeignkey',
     'crispy_forms',
+    'star_ratings',
 ]
 
 MIDDLEWARE = [
@@ -57,8 +58,13 @@ MIDDLEWARE = [
 
 ]
 
+STAR_RATINGS_ANONYMOUS = False
+STAR_RATINGS_RERATE = False
+
 
 ROOT_URLCONF = 'Rental_mobil.urls'
+
+TEMPLATE_CONTEXT_PROCESSORS = 'django.core.context_processors.request'
 
 TEMPLATES = [
     {

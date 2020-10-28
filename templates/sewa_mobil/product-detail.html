@@ -1,12 +1,15 @@
 {% extends 'main/base.html' %}
 {% load static %}
+{% load ratings %}
 {% block additional %}
-<!doctype html>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{% static "css/product-detail.css" %}">
+    <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+
     {% endblock %}
 {% block content %}
 <body class="bg-warning">
+<script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
     <br><br>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -55,6 +58,18 @@
     <p class="lead"><b>Harga : Rp </b><span class="text-danger">{{mobil.harga}}</span> / hari</p>
     <p class="lead"><b>Tipe : </b>{{mobil.tipe}}</p>
     <p class="lead"><b>transmisi : </b>{{mobil.transmisi}}</p>
+    {% ratings mobil %}
+    {% if pesanan.count > 0 %}
+        
+    {% else %}
+      <style type="text/css">
+        .star-ratings-rate-action{
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+      </style>
+    {% endif %}
+    <br><br>
     {% if mobil.status == "Available" %}
         <p class="lead"><b>Status : </b><span class="text-success">{{mobil.status}}</span></p>
     {% else %}

@@ -12,6 +12,7 @@ urlpatterns = [
     path('accounts/', include('akun.urls')),
     path('about/', about_view, name="about"),
     path('contact/', contact_view, name="contact"),
+    path('ratings/', include('star_ratings.urls', namespace='ratings')),
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
