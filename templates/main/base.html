@@ -61,6 +61,11 @@
 		    <a href="{% url 'register' %}"><button type="button" class="btn btn-warning">Register</button></a>
 		    {% endif %}
             </li>
+	<form class="form-inline" method="GET" action="{% url 'list' %}">
+          <input class="form-control mr-lg-2" type="search" placeholder="Cari mobil" aria-label="Search" name="search">
+          <button class="search-btn" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+        </form>
+
           </ul>
         </div>
       </nav>

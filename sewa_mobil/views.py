@@ -12,7 +12,11 @@ def car_list(request):
 
     q = request.GET.get('sort')
     q2 = request.GET.get('filter')
+    search = request.GET.get('search')
     mobil_all = Mobil.objects.all()
+
+    if search:
+        mobil_all = mobil_all.filter(nama__icontains=search)
 
     sort_murah = mobil_all.order_by('harga')
     sort_mahal = mobil_all.order_by('-harga')
@@ -55,6 +59,7 @@ def car_list(request):
                 'q':q,
                 'filtered':filtered,
                 'relevance':relevance,
+                'search':search
         }
 
     else:
@@ -65,6 +70,7 @@ def car_list(request):
                 'mahal':sort_mahal,
                 'q':q,
                 'relevance':relevance,
+                'search':search
         }
 
     return render(request, 'sewa_mobil/car.html', context)
@@ -114,7 +120,7 @@ def pesanan_view(request):
 
     return render(request, 'sewa_mobil/form_pemesanan.html', {'form':form_pesan, 'terpesan':terpesan})
 
-@login_required
+
 def detail_view(request, slug):
     model = get_object_or_404(Mobil, slug=slug)
     testimoni_baru = None
