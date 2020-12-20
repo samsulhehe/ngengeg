@@ -125,28 +125,30 @@ def detail_view(request, slug):
     model = get_object_or_404(Mobil, slug=slug)
     testimoni_baru = None
     testimoni_ = Testimoni.objects.filter(mobil__id=model.id)
-    pesanan = Pesanan.objects.filter(Q(mobil=model) & Q(selesai=True) & Q(user=request.user))
-
-    
-    if request.method == "POST":
-        testimoni = FormTestimoni(data=request.POST)
-        if testimoni.is_valid():
-            testimoni_baru = testimoni.save(commit=False)
-            testimoni_baru.mobil = model
-            testimoni_baru.nama = request.user
-            testimoni_baru.save()
-            testimoni = FormTestimoni()
+    try:
+        pesanan = Pesanan.objects.filter(Q(mobil=model) & Q(selesai=True) & Q(user=request.user))
+        if request.method == "POST":
+            testimoni = FormTestimoni(data=request.POST)
+            if testimoni.is_valid():
+                testimoni_baru = testimoni.save(commit=False)
+                testimoni_baru.mobil = model
+                testimoni_baru.nama = request.user
+                testimoni_baru.save()
+                testimoni = FormTestimoni()
+            else:
+                return HttpResponse("Mohon Ulangi")
         else:
-            return HttpResponse("Mohon Ulangi")
-    else:
-        testimoni = FormTestimoni()
+            testimoni = FormTestimoni()
 
-    id_ = 0
-    for t in testimoni_:
-        if t.nama == request.user:
-            id_ = t.id
+        id_ = 0
+        for t in testimoni_:
+            if t.nama == request.user:
+                id_ = t.id
 
-    return render(request, 'sewa_mobil/product-detail.html', {'mobil':model, 'testi':testimoni, 'testi_baru':testimoni_baru, 'testimoni':testimoni_, 'testi_id':id_, 'pesanan':pesanan})
+        return render(request, 'sewa_mobil/product-detail.html', {'mobil':model, 'testi':testimoni, 'testi_baru':testimoni_baru, 'testimoni':testimoni_, 'testi_id':id_, 'pesanan':pesanan})
+    except:
+        return render(request, 'sewa_mobil/product-detail.html', {'mobil':model, 'testi_baru':testimoni_baru, 'testimoni':testimoni_})
+
 
 
 @login_required

@@ -8,7 +8,11 @@
  <link rel="stylesheet" href="{% static "css/car.css" %}">
  <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
 <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
-
+<style type="text/css">
+    .car-list{
+      border-bottom: solid 2px white;
+    }
+  </style>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
@@ -41,7 +45,7 @@
 			<a class="dropdown-item" href="?sort=Relevance">Relevance</a>
 		  <a class="dropdown-item" href="?sort=Price Descending">Price Descending</a>
 		  <a class="dropdown-item" href="?sort=Price Ascending">Price Ascending</a>
-                  <a class="dropdown-item" href="#">Best Selling</a>
+                  <a class="dropdown-item" href="#">Best Order</a>
 		  {% endif %}
                 </div>
               </div>
@@ -62,16 +66,27 @@
             <div class="col-6 col-md-6 col-lg-4 mb-3">
               <div class="card h-100 border-0">
                 <div class="card-img-top">
-                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid mx-auto d-block" alt="Card image cap">
                 </div>
                 <div class="card-body text-center">
                   <h4 class="card-title">
-                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama|truncatechars:13}}|truncatechars:13}}</a>
                   </h4>
                   <h5 class="card-price small text-warning">
                     <i>
                     {{mobil.harga}}</i>
                   </h5>
+                    {% ratings mobil %}
+                    {% if pesanan.count > 0 %}
+          
+                    {% else %}
+                    <style type="text/css">
+                    .star-ratings-rate-action{
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    }
+                    </style>
+                    {% endif %}
                   {% if mobil.status == "Available" %}
                     <p class="lead text-success">{{mobil.status}}</p>
                   {% else %}
@@ -113,16 +128,27 @@
             <div class="col-6 col-md-6 col-lg-4 mb-3">
               <div class="card h-100 border-0">
                 <div class="card-img-top">
-                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid mx-auto d-block" alt="Card image cap">
                 </div>
                 <div class="card-body text-center">
                   <h4 class="card-title">
-                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama|truncatechars:13}}</a>
                   </h4>
                   <h5 class="card-price small text-warning">
                     <i>
                     {{mobil.harga}}</i>
                   </h5>
+                  {% ratings mobil %}
+                    {% if pesanan.count > 0 %}
+          
+                    {% else %}
+                    <style type="text/css">
+                    .star-ratings-rate-action{
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    }
+                    </style>
+                    {% endif %}
                   {% if mobil.status == "Available" %}
                     <p class="lead text-success">{{mobil.status}}</p>
                   {% else %}
@@ -162,16 +188,27 @@
             <div class="col-6 col-md-6 col-lg-4 mb-3">
               <div class="card h-100 border-0">
                 <div class="card-img-top">
-                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid mx-auto d-block" alt="Card image cap">
                 </div>
                 <div class="card-body text-center">
                   <h4 class="card-title">
-                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama|truncatechars:13}}</a>
                   </h4>
                   <h5 class="card-price small text-warning">
                     <i>
                     {{mobil.harga}}</i>
                   </h5>
+                  {% ratings mobil %}
+                    {% if pesanan.count > 0 %}
+          
+                    {% else %}
+                    <style type="text/css">
+                    .star-ratings-rate-action{
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    }
+                    </style>
+                    {% endif %}
                   {% if mobil.status == "Available" %}
                     <p class="lead text-success">{{mobil.status}}</p>
                   {% else %}
@@ -189,7 +226,7 @@
                     </div>
                     {% else %}
                         <div class="col">
-				<a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+				                <a href="{% url 'pesan' %}?car={{ mobil.plat }}">
                         <button type="button" class="btn btn-primary">Book</button>
                       </a>
                     </div>
@@ -213,16 +250,27 @@
             <div class="col-6 col-md-6 col-lg-4 mb-3">
               <div class="card h-100 border-0">
                 <div class="card-img-top">
-                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid mx-auto d-block" alt="Card image cap">
                 </div>
                 <div class="card-body text-center">
                   <h4 class="card-title">
-                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama|truncatechars:13}}</a>
                   </h4>
                   <h5 class="card-price small text-warning">
                     <i>
                     {{mobil.harga}}</i>
                   </h5>
+                  {% ratings mobil %}
+                    {% if pesanan.count > 0 %}
+          
+                    {% else %}
+                    <style type="text/css">
+                    .star-ratings-rate-action{
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    }
+                    </style>
+                    {% endif %}
                   {% if mobil.status == "Available" %}
                     <p class="lead text-success">{{mobil.status}}</p>
                   {% else %}
@@ -264,16 +312,27 @@
             <div class="col-6 col-md-6 col-lg-4 mb-3">
               <div class="card h-100 border-0">
                 <div class="card-img-top">
-                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid mx-auto d-block" alt="Card image cap">
                 </div>
                 <div class="card-body text-center">
                   <h4 class="card-title">
-                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama|truncatechars:13}}</a>
                   </h4>
                   <h5 class="card-price small text-warning">
                     <i>
                     {{mobil.harga}}</i>
                   </h5>
+                  {% ratings mobil %}
+                    {% if pesanan.count > 0 %}
+          
+                    {% else %}
+                    <style type="text/css">
+                    .star-ratings-rate-action{
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    }
+                    </style>
+                    {% endif %}
                   {% if mobil.status == "Available" %}
                     <p class="lead text-success">{{mobil.status}}</p>
                   {% else %}
@@ -313,16 +372,27 @@
             <div class="col-6 col-md-6 col-lg-4 mb-3">
               <div class="card h-100 border-0">
                 <div class="card-img-top">
-                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid mx-auto d-block" alt="Card image cap">
                 </div>
                 <div class="card-body text-center">
                   <h4 class="card-title">
-                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama|truncatechars:13}}</a>
                   </h4>
                   <h5 class="card-price small text-warning">
                     <i>
                     {{mobil.harga}}</i>
                   </h5>
+                  {% ratings mobil %}
+                    {% if pesanan.count > 0 %}
+          
+                    {% else %}
+                    <style type="text/css">
+                    .star-ratings-rate-action{
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    }
+                    </style>
+                    {% endif %}
                   {% if mobil.status == "Available" %}
                     <p class="lead text-success">{{mobil.status}}</p>
                   {% else %}
@@ -362,16 +432,27 @@
             <div class="col-6 col-md-6 col-lg-4 mb-3">
               <div class="card h-100 border-0">
                 <div class="card-img-top">
-                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px" class="img-fluid mx-auto d-block" alt="Card image cap">
+                  <img src="{{mobil.gambar.url}}" style="width: 200px; height: 200px; object-fit: cover;" class="img-fluid mx-auto d-block" alt="Card image cap">
                 </div>
                 <div class="card-body text-center">
                   <h4 class="card-title">
-                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama}}</a>
+                    <a href="{% url 'detail' mobil.slug %}" class=" font-weight-bold text-dark text-uppercase small">{{mobil.nama|truncatechars:13}}</a>
                   </h4>
                   <h5 class="card-price small text-warning">
                     <i>
                     {{mobil.harga}}</i>
                   </h5>
+                  {% ratings mobil %}
+                    {% if pesanan.count > 0 %}
+          
+                    {% else %}
+                    <style type="text/css">
+                    .star-ratings-rate-action{
+                    cursor: not-allowed;
+                    pointer-events: none;
+                    }
+                    </style>
+                    {% endif %}
                   {% if mobil.status == "Available" %}
                     <p class="lead text-success">{{mobil.status}}</p>
                   {% else %}

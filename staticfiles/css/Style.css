@@ -6,6 +6,7 @@
 header,
 section {
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 :root {
@@ -28,6 +29,12 @@ header a {
   display: none;
   position: absolute;
   background-color: #f1f1f1;
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-md-6 col-12">
+            <div class="pray">
+              <img src="{% static "img/ban2.jpg" %}" alt="car" class="" />
+            </div>
   min-width: 160px;
   box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;

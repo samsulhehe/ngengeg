@@ -4,9 +4,9 @@
     {% csrf_token %}
         </div><div class="col-md-4 order-md-1 col-lg-3 sidebar-filter">
         {% if request.method == "POST" %}
-          <h3 class="mt-0 mb-5">Showing <span class="text-primary">{{ filtered.count }}</span> Products</h3>
+          <h3 class="mt-0 mb-5">Showing <span class="text-primary">{{ filtered.count }}</span> car</h3>
         {% else %}
-          <h3 class="mt-0 mb-5">Showing <span class="text-primary">{{ relevance.count }}</span> Products</h3>
+          <h3 class="mt-0 mb-5">Showing <span class="text-primary">{{ relevance.count }}</span> Car</h3>
         {% endif %}
           <h6 class="text-uppercase font-weight-bold mb-3">Categories</h6>
           <div class="mt-2 mb-2 pl-2">
@@ -60,7 +60,7 @@
             </div>
           </div>
           <div class="divider mt-5 mb-5 border-bottom border-secondary"></div>
-          <input type="submit" class="btn btn-lg btn-block btn-primary mt-5"></input>
+          <input type="submit" class="btn btn-lg btn-block btn-primary mt-5" value="Submit"></input>
         </div>
 
       </div>

@@ -5,39 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{% static "css/product-detail.css" %}">
     <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
-
+    <style type="text/css">
+      body{
+         font-family: "Times New Roman";
+      }
+    </style>
     {% endblock %}
 {% block content %}
-<body class="bg-warning">
+<body class="bg-lght">
+  <style type="text/css">
+    .carousel{
+    max-height: 450px;
+    max-width: 50%;
+}
+/*.carousel-inner{
+    max-height: 70vh;
+    max-width: 50% !important;
+}*/
+
+.carousel-item img{
+    /*max-height: 70vh; */
+    /*height: auto;*/
+    width: 50%;
+}
+  </style>
 <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
     <br><br>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <div class="container shadow rounded bg-light" style="padding: 50px 100px">
-        <br><br>
-        <h1 class="display-4" align="center"><b>Detail Car</b></h1><hr>
+    <div class="container shadow rounded bg-light" style="padding: 50px">
+        <h1 class="" align="center"><b>PRODUCTS DETAIL</b></h1><hr>
         <h1 align="left">{{nama}}</h1>
-        <div id="carouselExampleIndicators" style="max-height: 70vh;" class="carousel slide" data-ride="carousel">
+        <div style="display: flex; justify-content: space-between">
+        <div id="carouselExampleIndicators" class="rounded carousel gambar-mobil slide" data-ride="carousel">
           <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
         </ol>
-        <div class="carousel-inner" style="max-height: 70vh; height: auto">
-            <div class="carousel-item active">
-                <img src="{{mobil.gambar.url}}" style="max-height: 70vh; height: auto" class="d-block w-100" alt="...">
+        <div class="carousel-inner">
+            <div class="carousel-item active" style="height: 400px; width: 100%">
+                <img src="{{mobil.gambar.url}}" style="object-fit:cover; width: 100%; height: 100%;object-position: 50% 50%;" class="d-block w-100" alt="...">
             </div>
-            <div class="carousel-item">
-              <img src="{{mobil.gambar2.url}}" style="max-height: 70vh; height: auto" class="d-block w-100" alt="...">
+            <div class="carousel-item" style="height: 400px; width: 100%">
+              <img src="{{mobil.gambar2.url}}" style="object-fit:cover; width: 100%; height: 100%;object-position: 50% 50%;" class="d-block w-100" alt="...">
           </div>
-          <div class="carousel-item">
-              <img src="{{mobil.gambar3.url}}" style="max-height: 70vh; height: auto" class="d-block w-100" alt="...">
+          <div class="carousel-item" style="height: 400px">
+              <img src="{{mobil.gambar3.url}}" style="object-fit:cover; width: 100%; height: 100%;object-position: 50% 50%;" class="d-block w-100" alt="...">
           </div>
 	  {% if mobil.gambar4 %}
-          <div class="carousel-item">
-              <img src="{{mobil.gambar4.url}}" style="max-height: 70vh; height: auto" class="d-block w-100" alt="...">
+          <div class="carousel-item" style="height: 400px">
+              <img src="{{mobil.gambar4.url}}" style="object-fit:cover; width: 100%; height: 100%;object-position: 50% 50%;" class="d-block w-100" alt="...">
 	      {% endif %}
           </div>
       </div>
@@ -51,14 +71,32 @@
     </a>
 
 </div>
-<div class="card mb-5">
+<div class="card mb-5" style="width: 500px;height: 400px">
 	<div class="card-body">
-    <p class="lead"><b>Nama : </b>{{mobil.nama}}</p>
-    <p class="lead"><b>Plat : </b>{{mobil.plat}}</p>
-    <p class="lead"><b>Harga : Rp </b><span class="text-danger">{{mobil.harga}}</span> / hari</p>
-    <p class="lead"><b>Tipe : </b>{{mobil.tipe}}</p>
-    <p class="lead"><b>transmisi : </b>{{mobil.transmisi}}</p>
-    {% ratings mobil %}
+    <h5 align="center" class=""><b>{{mobil.nama}}</b></h5>
+    <hr>
+    <p class="">
+        <b>Deskripsi : </b>{{mobil.deskripsi | linebreaks}}
+    </p>
+    <p class=""><b>Plat : </b>{{mobil.plat}}</p>
+    <p class=""><b>Harga : Rp </b><span class="text-danger">{{mobil.harga}}</span> / hari</p>
+    <p class=""><b>Tipe : </b>{{mobil.tipe}}</p>
+    <p class=""><b>transmisi : </b>{{mobil.transmisi}}</p>
+    
+    
+    {% if mobil.status == "Available" %}
+      <a href="{% url 'pesan' %}?car={{ mobil.plat }}">
+                        <button type="button" style="float: right" class="btn btn-primary">Book</button>
+                      </a>
+    {% else %}
+      <button type="button" style="float: right" class="btn btn-danger">Not Available</button>
+    {% endif %}
+                        
+	</div>
+</div>
+</div>
+<div>
+  {% ratings mobil %}
     {% if pesanan.count > 0 %}
         
     {% else %}
@@ -75,10 +113,6 @@
     {% else %}
         <p class="lead"><b>Status : </b><span class="text-danger">{{mobil.status}}</span></p>
     {% endif %}
-    <p class="lead">
-        <b>Deskripsi : </b>{{mobil.deskripsi | linebreaks}}
-    </p>
-	</div>
 </div>
  <div class="col-md-8 card mb-4  mt-3 ">
       <div class="card-body">

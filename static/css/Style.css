@@ -14,7 +14,7 @@ section {
   --Patua: "Patua One", cursive;
   --Lobster: "lobster", cursive;
   --light-black: #2e2c2caf;
-  --bggradient: linear-gradient(to bottom, #9633ff, #3386ff);
+  --bggradient: linear-gradient(to bottom, #3386ff, #3386ff);
   --light-gray: rgba(255, 255, 255, 0.877);
 }
 
